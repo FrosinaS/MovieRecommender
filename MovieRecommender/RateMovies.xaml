@@ -29,7 +29,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <ListBox Name="listMovies" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding}" SelectedIndex="-1" SelectionChanged="listMovies_SelectionChanged">
+            <ListBox Name="listMovies" Grid.Row="0" Grid.Column="0"  SelectedIndex="-1" SelectionChanged="listMovies_SelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="3, 3, 3, 6">

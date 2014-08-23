@@ -19,7 +19,7 @@ namespace MovieRecommender
         public String movieOriginalTitle { get; set; }
         public String movieImage { get; set; }
         public String movieReleaseDate { get; set; }
-        public List<Genre> movieGenres { get; set; }
+        public List<Genres> movieGenres { get; set; }
         public String movieOverview { get; set; }
         public String movieStatus { get; set; }
         public String movieHomepage{get; set;}
@@ -32,7 +32,7 @@ namespace MovieRecommender
             movieImage = "filmimage.png";
             movieReleaseDate = "Unknown";
             movieStatus = "Unknown";
-            movieGenres = new List<Genre>();
+            movieGenres = new List<Genres>();
             movieHomepage="/";
         }
 
@@ -43,7 +43,7 @@ namespace MovieRecommender
         public String backdrop_path { get; set; }
         public String belongs_to_collection { get; set; }
         public long budget { get; set; }
-        public List<Genre> genres { get; set; }
+        public List<Genres> genres { get; set; }
         public String homepage { get; set; }
         public long id { get; set; }
         public String imdb_id { get; set; }
@@ -63,7 +63,7 @@ namespace MovieRecommender
         public float vote_average { get; set; }
         public long vote_count { get; set; }
     }
-    
+   
     public class ProductionCompanies
     {
         public String name { get; set; }

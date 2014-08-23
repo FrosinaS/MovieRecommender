@@ -18,18 +18,15 @@ using System.Text;
 
 namespace MovieRecommender
 {
-    public class Genre
+    public class Genres
     {
         public long genreId { get; set; }
         public String genreName { get; set; }
-
-        public Genre(long genreId, String genreName)
+        public Genres(long genreId, String genreName)
         {
             this.genreId = genreId;
             this.genreName = genreName;
         }
-
-        
     }
 
     public class MyMovieList

@@ -12,6 +12,8 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Newtonsoft.Json;
 using System.Text;
+using Microsoft.Phone.Shell;
+using System.IO.IsolatedStorage;
 
 namespace MovieRecommender
 {
@@ -41,7 +43,8 @@ namespace MovieRecommender
             }
 
         }
-
+       
+           
         void webClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
             try
@@ -58,7 +61,7 @@ namespace MovieRecommender
                         movies.Add(movie);
                        
                     }
-                    ContentPanel.DataContext = movies;
+                    listMovies.ItemsSource = movies;
                 }
             }
             catch (Exception ex)
@@ -71,6 +74,8 @@ namespace MovieRecommender
 
         private void listMovies_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            Movie movie = listMovies.SelectedItem as Movie;
+            PhoneApplicationService.Current.State["movieId"] = movie.movieId;
             NavigationService.Navigate(new Uri("/RateMovie.xaml", UriKind.Relative));
         }
     }

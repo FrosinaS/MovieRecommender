@@ -11,25 +11,77 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Newtonsoft.Json;
+using System.Data.Linq;
+using System.Data.Linq.Mapping;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
+using Microsoft.Phone.Shell;
+using System.Text;
 
 namespace MovieRecommender
 {
     public partial class RateMovie : PhoneApplicationPage
     {
+        private const string strConnectionString = @"DataSource=isostore:/MoviesDB.sdf";
         Movie movie;
+        long movieID;
         public RateMovie()
         {
             InitializeComponent();
+            movieID = 0;
             movie = new Movie(-1);
+            var k = PhoneApplicationService.Current.State["movieId"];
+            movieID = Convert.ToInt64(k);
+            movie.movieId = movieID;
+
+            
+            CheckVoting();
             GetMovie();
         }
 
+        public void CheckVoting()
+        {
+            IList<RatedMovies> ratedMovies = null;
+
+            using (MovieDataContext Empdb = new MovieDataContext(strConnectionString))
+            {
+                if (Empdb.DatabaseExists())
+                {
+                    IQueryable<RatedMovies> EmpQuery = from RatedMovies mv in Empdb.RatedMovies where mv.movieId == movieID select mv;
+                    ratedMovies = EmpQuery.ToList();
+                    foreach (RatedMovies movie in ratedMovies)
+                    {
+                        if (movie.movieVote)
+                        {
+                            rateUpBtn.IsEnabled = false;
+
+                        }
+                        else
+                        {
+                            rateUpBtn.IsEnabled = false;
+                        }
+                    }
+                    IList<FavoriteGenres> favGenres = null;
+                    IQueryable<FavoriteGenres> favQuery = from FavoriteGenres mv in Empdb.FavoriteGenres select mv;
+                    favGenres = favQuery.ToList();
+                    StringBuilder bl = new StringBuilder();
+                    foreach (FavoriteGenres gen in favGenres)
+                    {
+                        bl.Append(gen.genreId);
+                    }
+                    MessageBox.Show(bl.ToString());
+                }
+
+            }
+        }
+                
+               
         public void GetMovie()
         {
             try
             {
                 WebClient webClient = new WebClient();
-                string url = "http://api.themoviedb.org/3/movie/" + 279181 + "?api_key=9d8233dd037a14ac32e473b3147e67f0";
+                string url = "http://api.themoviedb.org/3/movie/" + movieID + "?api_key=9d8233dd037a14ac32e473b3147e67f0";
                 Uri uri = new Uri(url);
                 webClient.DownloadStringCompleted += webClient_DownloadStringCompleted;
                 webClient.DownloadStringAsync(uri);
@@ -56,7 +108,10 @@ namespace MovieRecommender
                     movie.movieStatus = rootObject.status;
                     movie.movieOverview = rootObject.overview;
                     movie.movieTitle = rootObject.title;
-                    movie.movieGenres = rootObject.genres;
+                    foreach (Genres gen in rootObject.genres.ToArray())
+                    {
+                        movie.movieGenres.Add(gen);
+                    }
                     movie.movieHomepage = rootObject.homepage;
                     LayoutRoot.DataContext = movie;
                     
@@ -69,5 +124,81 @@ namespace MovieRecommender
 
 
         }
+
+        private void createDb()
+        {
+            using (MovieDataContext MvDb = new MovieDataContext(strConnectionString))
+            {
+                try
+                {
+                    if (MvDb.DatabaseExists() == false)
+                    {
+                        MvDb.CreateDatabase();
+                        MessageBox.Show("Movies Database Created Successfully!!!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Movies Database already exists!!!");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+       
+
+        private void rateDownBtn_Click(object sender, RoutedEventArgs e)
+        {
+            createDb();
+
+            using (MovieDataContext MvDb = new MovieDataContext(strConnectionString))
+            {
+                RatedMovies newMovie = new RatedMovies
+                {
+                    movieId = movieID,
+                    movieVote=false
+                };
+                MvDb.RatedMovies.InsertOnSubmit(newMovie);
+                MvDb.SubmitChanges();
+                MessageBox.Show("You gave negative rating for this movie!");
+            }
+
+        }
+
+        private void rateUpBtn_click(object sender, RoutedEventArgs e)
+        {
+            createDb();
+            using (MovieDataContext MvDb = new MovieDataContext(strConnectionString))
+            {
+                RatedMovies newMovie = new RatedMovies
+                {
+                    movieId = movieID,
+                    movieVote = true
+                };
+                MvDb.RatedMovies.InsertOnSubmit(newMovie);
+                foreach (Genres genre in movie.movieGenres)
+                {
+                    IList<FavoriteGenres> gen = null;
+                    IQueryable<FavoriteGenres> EmpQuery = from FavoriteGenres mv in MvDb.FavoriteGenres where mv.genreId == genre.genreId select mv;
+                    gen = EmpQuery.ToList();
+                    if (gen == null)
+                    {
+                        FavoriteGenres fav = new FavoriteGenres
+                        {
+                            genreId = genre.genreId
+                        };
+                        MvDb.FavoriteGenres.InsertOnSubmit(fav);
+                    }
+                }
+
+                MvDb.SubmitChanges();
+                MessageBox.Show("You gave positive rating for this movie!");
+            }
+        }
+
+       
     }
 }

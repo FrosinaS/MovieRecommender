@@ -27,8 +27,8 @@
                 <TextBlock Text="{Binding Path=movieTitle, Mode=OneWay}" TextWrapping="Wrap" FontSize="48" Width="200"/>
                 <TextBlock Text="{Binding Path=movieOriginalTitle, Mode=OneWay}" Margin="5, 5, 5, 5" Width="200"/>
                 <StackPanel Orientation="Horizontal" Height="70" >
-                    <Button Name="rateUpBtn" Content="+" Width="70" VerticalAlignment="Center"></Button>
-                    <Button Name="rateDownBtn" Content="-" Width="70" VerticalAlignment="Center"></Button>
+                    <Button Name="rateUpBtn" Content="+" Width="70" VerticalAlignment="Center" Click="rateUpBtn_click"></Button>
+                    <Button Name="rateDownBtn" Content="-" Width="70" VerticalAlignment="Center" Click="rateDownBtn_Click"></Button>
                 </StackPanel>
             </StackPanel>
             
