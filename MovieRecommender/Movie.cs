@@ -22,7 +22,7 @@ namespace MovieRecommender
         public List<Genre> movieGenres { get; set; }
         public String movieOverview { get; set; }
         public String movieStatus { get; set; }
-        
+        public String movieHomepage{get; set;}
         public Movie(long movieId)
         {
             this.movieId = movieId;
@@ -33,10 +33,57 @@ namespace MovieRecommender
             movieReleaseDate = "Unknown";
             movieStatus = "Unknown";
             movieGenres = new List<Genre>();
-
+            movieHomepage="/";
         }
 
     }
+    public class FullMovie
+    {
+        public String adult { get; set; }
+        public String backdrop_path { get; set; }
+        public String belongs_to_collection { get; set; }
+        public long budget { get; set; }
+        public List<Genre> genres { get; set; }
+        public String homepage { get; set; }
+        public long id { get; set; }
+        public String imdb_id { get; set; }
+        public String original_title { get; set; }
+        public String overview { get; set; }
+        public float popularity { get; set; }
+        public String poster_path { get; set; }
+        public List<ProductionCompanies> production_companies { get; set; }
+        public List<ProductionCountries> production_countries { get; set; }
+        public String release_date { get; set; }
+        public long revenue { get; set; }
+        public float runtime { get; set; }
+        public List<ProductionCompanies> spoken_languages { get; set; }
+        public String status { get; set; }
+        public String tagline { get; set; }
+        public String title { get; set; }
+        public float vote_average { get; set; }
+        public long vote_count { get; set; }
+    }
     
+    public class ProductionCompanies
+    {
+        public String name { get; set; }
+        public long id { get; set; }
+        public ProductionCompanies(String name, long id)
+        {
+            this.name = name;
+            this.id = id;
+        }
+    }
+
+    public class ProductionCountries
+    {
+        public String iso { get; set; }
+        public String name { get; set; }
+        public ProductionCountries(String name, String iso)
+        {
+            this.iso = iso;
+            this.name = name;
+        }
+    }
 
 }
