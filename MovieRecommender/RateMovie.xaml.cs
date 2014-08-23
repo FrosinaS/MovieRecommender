@@ -33,8 +33,6 @@ namespace MovieRecommender
             var k = PhoneApplicationService.Current.State["movieId"];
             movieID = Convert.ToInt64(k);
             movie.movieId = movieID;
-
-            
             CheckVoting();
             GetMovie();
         }
@@ -64,12 +62,11 @@ namespace MovieRecommender
                     IList<FavoriteGenres> favGenres = null;
                     IQueryable<FavoriteGenres> favQuery = from FavoriteGenres mv in Empdb.FavoriteGenres select mv;
                     favGenres = favQuery.ToList();
-                    StringBuilder bl = new StringBuilder();
                     foreach (FavoriteGenres gen in favGenres)
                     {
-                        bl.Append(gen.genreId);
+                        FavoriteGenres gen1 = new FavoriteGenres();
+                        gen1.genreId = gen.genreId;
                     }
-                    MessageBox.Show(bl.ToString());
                 }
 
             }
@@ -108,9 +105,10 @@ namespace MovieRecommender
                     movie.movieStatus = rootObject.status;
                     movie.movieOverview = rootObject.overview;
                     movie.movieTitle = rootObject.title;
-                    foreach (Genres gen in rootObject.genres.ToArray())
+                    foreach (Genre gen in rootObject.genres)
                     {
-                        movie.movieGenres.Add(gen);
+                        Genre genre = new Genre(gen.id, gen.name);
+                        movie.movieGenres.Add(genre);
                     }
                     movie.movieHomepage = rootObject.homepage;
                     LayoutRoot.DataContext = movie;
@@ -133,13 +131,9 @@ namespace MovieRecommender
                 {
                     if (MvDb.DatabaseExists() == false)
                     {
-                        MvDb.CreateDatabase();
-                        MessageBox.Show("Movies Database Created Successfully!!!");
+                        MvDb.CreateDatabase();  
                     }
-                    else
-                    {
-                        MessageBox.Show("Movies Database already exists!!!");
-                    }
+                    
                 }
                 catch (Exception ex)
                 {
@@ -156,10 +150,15 @@ namespace MovieRecommender
 
             using (MovieDataContext MvDb = new MovieDataContext(strConnectionString))
             {
+                
+                IQueryable<RatedMovies> EmpQuery = from RatedMovies mv in MvDb.RatedMovies where mv.movieId == movieID select mv;
+                RatedMovies ratedMovies = EmpQuery.FirstOrDefault();
+                MvDb.RatedMovies.DeleteOnSubmit(ratedMovies);
+                //MvDb.SubmitChanges();
                 RatedMovies newMovie = new RatedMovies
                 {
                     movieId = movieID,
-                    movieVote=false
+                    movieVote = false
                 };
                 MvDb.RatedMovies.InsertOnSubmit(newMovie);
                 MvDb.SubmitChanges();
@@ -173,22 +172,29 @@ namespace MovieRecommender
             createDb();
             using (MovieDataContext MvDb = new MovieDataContext(strConnectionString))
             {
+                IQueryable<RatedMovies> EmpQuery = from RatedMovies mv in MvDb.RatedMovies where mv.movieId == movieID select mv;
+                RatedMovies ratedMovies = EmpQuery.FirstOrDefault();
+                MvDb.RatedMovies.DeleteOnSubmit(ratedMovies);
+                MvDb.SubmitChanges();
                 RatedMovies newMovie = new RatedMovies
                 {
                     movieId = movieID,
                     movieVote = true
                 };
                 MvDb.RatedMovies.InsertOnSubmit(newMovie);
-                foreach (Genres genre in movie.movieGenres)
+                MvDb.SubmitChanges();
+                foreach (Genre genre in movie.movieGenres)
                 {
+                    
                     IList<FavoriteGenres> gen = null;
-                    IQueryable<FavoriteGenres> EmpQuery = from FavoriteGenres mv in MvDb.FavoriteGenres where mv.genreId == genre.genreId select mv;
-                    gen = EmpQuery.ToList();
+                    IQueryable<FavoriteGenres> Query = from FavoriteGenres mv in MvDb.FavoriteGenres where mv.genreId==genre.id select mv;
+                    gen = Query.ToList();
+                    
                     if (gen == null)
                     {
                         FavoriteGenres fav = new FavoriteGenres
                         {
-                            genreId = genre.genreId
+                            genreId = genre.id
                         };
                         MvDb.FavoriteGenres.InsertOnSubmit(fav);
                     }

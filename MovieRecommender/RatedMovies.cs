@@ -39,14 +39,14 @@ namespace MovieRecommender
     [Table]
     public class FavoriteGenres
     {
-        [Column(IsPrimaryKey = true, IsDbGenerated = false, CanBeNull = false)]
-        public long id
+        [Column(IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false)]
+        public int id
         {
             get;
             set;
         }
         [Column(IsDbGenerated = false)]
-        public long genreId
+        public int genreId
         {
             get;
             set;

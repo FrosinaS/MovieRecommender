@@ -6,13 +6,16 @@
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:MovieRecommender"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True">
-
+<phone:PhoneApplicationPage.Resources>
+        <local:GenresConverter x:Key="GenresConverter"/>
+    </phone:PhoneApplicationPage.Resources>
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
@@ -52,7 +55,7 @@
             </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="10" Width="430">
                 <TextBlock Text="Genres:"></TextBlock>
-                <TextBlock Text="{Binding Path=movieGenres, Mode=OneWay}" MaxWidth="300"></TextBlock>
+                <TextBlock Text="{Binding Path=movieGenres, Mode=OneWay, Converter={StaticResource GenresConverter}}" MaxWidth="300"></TextBlock>
             </StackPanel>
             <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="10">
                 <TextBlock Text="{Binding Path=movieOverview, Mode=OneWay}"></TextBlock>
