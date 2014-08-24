@@ -32,9 +32,13 @@
                                 <Image Source="{Binding Path=movieImage, Mode=OneWay}" Width="250" Height="250"/>
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock Text="{Binding Path=movieOriginalTitle, Mode=OneWay}" Margin="5, 5, 5, 5" Width="190" TextWrapping="Wrap"/>
-                                    <StackPanel Orientation="Horizontal" Height="70" >
-                                        <Button Name="addToDoList" Content="Add to my to do list" VerticalAlignment="Center" FontSize="14" Click="addToDoList_click"></Button>
-                                        </StackPanel>
+                                    <StackPanel Orientation="Vertical" >
+                                        <Button Name="addToDoList" Content="Add to my watch list" VerticalAlignment="Center" FontSize="14" Click="addToDoList_click"></Button>
+                                        <StackPanel Orientation="Horizontal" >
+                                        <Button Name="rateUpBtn" Content="+" Width="70" VerticalAlignment="Center" Click="rateUpBtn_click"></Button>
+                                        <Button Name="rateDownBtn" Content="-" Width="70" VerticalAlignment="Center" Click="rateDownBtn_Click"></Button>
+                                    </StackPanel>
+                                    </StackPanel>
                                 </StackPanel>
                             </StackPanel>
 

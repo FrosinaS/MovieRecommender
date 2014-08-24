@@ -28,6 +28,24 @@ namespace MovieRecommender
             var k = PhoneApplicationService.Current.State["movieId"];
             movieID = Convert.ToInt64(k);
             movie.movieId = movieID;
+            int a = Convert.ToInt32(PhoneApplicationService.Current.State["which"]);
+            if (a == 0)
+            {
+                addToDoList.Visibility = Visibility.Collapsed;
+            }
+            else if (a == 1)
+            {
+                rateDownBtn.Visibility = Visibility.Collapsed;
+                rateUpBtn.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                addToDoList.Visibility = Visibility.Visible;
+                rateDownBtn.Visibility = Visibility.Visible;
+                rateUpBtn.Visibility = Visibility.Visible;
+            }
+
+            
             GetMovie();
             CheckVoting();
             
@@ -44,14 +62,40 @@ namespace MovieRecommender
                 if (Empdb.DatabaseExists())
                 {
                     IList<ToDoList> toDoList = null;
-                    IQueryable<ToDoList> EmpQuery = from ToDoList mv in Empdb.ToDoList where mv.movieTitle == movie.movieTitle select mv;
+                    IQueryable<ToDoList> EmpQuery = from ToDoList mv in Empdb.ToDoList where mv.movieId == movieID select mv;
                     toDoList = EmpQuery.ToList();
-                    if (toDoList != null)
+                    foreach (ToDoList lst in toDoList)
                     {
-                        addToDoList.IsEnabled = false;
+                        if (lst.movieId == movie.movieId)
+                        {
+                            addToDoList.Content = "Remove from my watch list";
+                        }
+                        else
+                        {
+                            addToDoList.Content = "Add to my watch list";
+                        }
                     }
 
+                    IList<RatedMovies> ratedMovies = null;
+                    IQueryable<RatedMovies> Query = from RatedMovies mv in Empdb.RatedMovies where mv.movieId == movieID select mv;
+                    ratedMovies = Query.ToList();
+                    foreach (RatedMovies movie in ratedMovies)
+                    {
+                        if (movie.movieVote)
+                        {
+                            rateUpBtn.IsEnabled = false;
+
+                        }
+                        else
+                        {
+                            rateUpBtn.IsEnabled = false;
+                        }
+                    }
+
+                    
+
                 }
+
             }
         }
                 
@@ -112,16 +156,31 @@ namespace MovieRecommender
 
             using (MovieDataContext MvDb = new MovieDataContext(strConnectionString))
             {
-                
+               
+                if (addToDoList.Content.ToString() == "Remove from my watch list")
+                {
+                    ToDoList movie = null;
+                    IQueryable<ToDoList> EmpQuery = from ToDoList mv in MvDb.ToDoList where mv.movieId == movieID select mv;
+                    movie= EmpQuery.FirstOrDefault();
+                    MvDb.ToDoList.DeleteOnSubmit(movie);
+                    MvDb.SubmitChanges();
+                    addToDoList.Content = "Add to my watch list";
+                    MessageBox.Show("You removed this movie from your watch list!");
+                }
+                else
+                {
+
                     ToDoList newMovie = new ToDoList
-                    {
-                        movieTitle = movie.movieTitle,
-                        movieImage = movie.movieImage
-                    };
+                        {
+                            movieId = movie.movieId,
+                            movieTitle = movie.movieTitle,
+                            movieImage = movie.movieImage
+                        };
                     MvDb.ToDoList.InsertOnSubmit(newMovie);
                     MvDb.SubmitChanges();
-                    MessageBox.Show("You added this movie to your to do list!");
-                
+                    addToDoList.Content = "Remove from my watch list";
+                    MessageBox.Show("You added this movie to your watch list!");
+                }
                 
                
             }
@@ -146,6 +205,79 @@ namespace MovieRecommender
             }
         }
 
+        private void rateDownBtn_Click(object sender, RoutedEventArgs e)
+        {
+            createDb();
+
+            using (MovieDataContext MvDb = new MovieDataContext(strConnectionString))
+            {
+
+                IQueryable<RatedMovies> EmpQuery = from RatedMovies mv in MvDb.RatedMovies where mv.movieId == movieID select mv;
+                RatedMovies ratedMovies = EmpQuery.FirstOrDefault();
+                if (ratedMovies != null)
+                {
+                    MvDb.RatedMovies.DeleteOnSubmit(ratedMovies);
+                    MvDb.SubmitChanges();
+                }
+                RatedMovies newMovie = new RatedMovies
+                {
+                    movieId = movieID,
+                    movieVote = false
+                };
+                MvDb.RatedMovies.InsertOnSubmit(newMovie);
+                MvDb.SubmitChanges();
+                rateDownBtn.IsEnabled = false;
+                rateUpBtn.IsEnabled = true;
+                MessageBox.Show("You gave negative rating for this movie!");
+            }
+
+        }
+
+        private void rateUpBtn_click(object sender, RoutedEventArgs e)
+        {
+            createDb();
+            using (MovieDataContext MvDb = new MovieDataContext(strConnectionString))
+            {
+                IQueryable<RatedMovies> EmpQuery = from RatedMovies mv in MvDb.RatedMovies where mv.movieId == movieID select mv;
+                RatedMovies ratedMovies = EmpQuery.FirstOrDefault();
+                if (ratedMovies != null)
+                {
+                    MvDb.RatedMovies.DeleteOnSubmit(ratedMovies);
+                    MvDb.SubmitChanges();
+                }
+                RatedMovies newMovie = new RatedMovies
+                {
+                    movieId = movieID,
+                    movieVote = true
+                };
+                MvDb.RatedMovies.InsertOnSubmit(newMovie);
+                MvDb.SubmitChanges();
+                foreach (Genre genre in movie.movieGenres)
+                {
+
+                    
+                    IQueryable<FavoriteGenres> Query = from FavoriteGenres mv in MvDb.FavoriteGenres where mv.genreId == genre.id select mv;
+                    FavoriteGenres gen = Query.FirstOrDefault();
+                    
+                     if (gen == null)
+                        {
+                            FavoriteGenres fav = new FavoriteGenres
+                            {
+                                genreId = genre.id
+                            };
+                            MvDb.FavoriteGenres.InsertOnSubmit(fav);
+                            MvDb.SubmitChanges();
+                        }
+                    }
+                }
+
+                
+                rateUpBtn.IsEnabled = false;
+                rateDownBtn.IsEnabled = true;
+                MessageBox.Show("You gave positive rating for this movie!");
+            }
+        }
+
 
 
         
@@ -157,4 +289,4 @@ namespace MovieRecommender
         }
 
        
-    }
+    

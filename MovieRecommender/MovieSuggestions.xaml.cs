@@ -12,36 +12,49 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Newtonsoft.Json;
 using Microsoft.Phone.Shell;
+using System.Text;
 
 namespace MovieRecommender
 {
     public partial class MovieSuggestions : PhoneApplicationPage
     {
+        private const string strConnectionString = @"DataSource=isostore:/MoviesDB.sdf";
         List<Movie> movies;
+        long genreId;
         public MovieSuggestions()
         {
             InitializeComponent();
             movies = new List<Movie>();
+            listMovies.SelectedIndex = -1;
+            genreId = 1;
             GetMovies();
+            listMovies.ItemsSource = movies;
         }
 
         public void GetMovies()
         {
-            try
+            using (MovieDataContext Empdb = new MovieDataContext(strConnectionString))
             {
-                WebClient webClient = new WebClient();
-                Uri uri = new Uri("https://api.themoviedb.org/3/discover/movie?api_key=9d8233dd037a14ac32e473b3147e67f0&with_genres=35&primary_release_year=2014");
-                webClient.DownloadStringCompleted += webClient_DownloadStringCompleted;
-                webClient.DownloadStringAsync(uri);
+                if (Empdb.DatabaseExists())
+                {
+                    IList<FavoriteGenres> gen = null;
+                    IQueryable<FavoriteGenres> Query = from FavoriteGenres mv in Empdb.FavoriteGenres select mv;
+                    gen = Query.ToList();
+                    WebClient webClient = new WebClient();
+                    webClient.DownloadStringCompleted += webClient_DownloadStringCompleted;
 
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+                    foreach (FavoriteGenres genre in gen)
+                    {
+                        genreId = genre.genreId;
+                        Uri uri = new Uri("https://api.themoviedb.org/3/discover/movie?api_key=9d8233dd037a14ac32e473b3147e67f0&with_genres=" + genre.genreId);
+                        webClient.DownloadStringAsync(uri);
+                    }
+
+                }
+
             }
 
         }
-
 
         void webClient_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
@@ -50,16 +63,16 @@ namespace MovieRecommender
                 if (!string.IsNullOrEmpty(e.Result.ToString()))
                 {
                     var rootObject = JsonConvert.DeserializeObject<RootObject>(e.Result.ToString());
-                    foreach (var res in rootObject.results)
-                    {
-                        Movie movie = new Movie(res.id);
-                        movie.movieImage = "http://image.tmdb.org/t/p/w500" + res.poster_path;
-                        movie.movieTitle = res.title;
-                        movie.movieReleaseDate = res.release_date;
-                        movies.Add(movie);
+                    int numPages = Convert.ToInt32(rootObject.total_pages);
+                    Random rnd = new Random();
+                    int newPage = rnd.Next(1, numPages);
+                    WebClient webClient = new WebClient();
+                    Uri uri = new Uri("https://api.themoviedb.org/3/discover/movie?api_key=9d8233dd037a14ac32e473b3147e67f0&with_genres=" + genreId
 
-                    }
-                    listMovies.ItemsSource = movies;
++ "&page=" + newPage);
+                    webClient.DownloadStringCompleted += webClient_DownloadStringComplete;
+                    webClient.DownloadStringAsync(uri);
+
                 }
             }
             catch (Exception ex)
@@ -69,11 +82,37 @@ namespace MovieRecommender
 
 
         }
+        void webClient_DownloadStringComplete(object sender, DownloadStringCompletedEventArgs e)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(e.Result.ToString()))
+                {
+                    var rootObject = JsonConvert.DeserializeObject<RootObject>(e.Result.ToString());
+
+                    foreach (var res in rootObject.results)
+                    {
+                        Movie movie = new Movie(res.id);
+                        movie.movieImage = "http://image.tmdb.org/t/p/w500" + res.poster_path;
+                        movie.movieTitle = res.title;
+                        movie.movieReleaseDate = res.release_date;
+                        movies.Add(movie);
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
 
         private void listMovies_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Movie movie = listMovies.SelectedItem as Movie;
             PhoneApplicationService.Current.State["movieId"] = movie.movieId;
+            PhoneApplicationService.Current.State["which"] = 1;
             NavigationService.Navigate(new Uri("/MovieReview.xaml", UriKind.Relative));
         }
     }

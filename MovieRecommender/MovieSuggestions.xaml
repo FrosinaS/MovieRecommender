@@ -17,6 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
@@ -40,5 +41,5 @@
 
             </ListBox>
         </Grid>
-    </Grid>
+        </Grid>
 </phone:PhoneApplicationPage>

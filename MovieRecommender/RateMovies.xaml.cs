@@ -24,6 +24,7 @@ namespace MovieRecommender
         {
             InitializeComponent();
             movies = new List<Movie>();
+            listMovies.SelectedIndex = -1;
             GetMovies();
         }
 
@@ -76,7 +77,8 @@ namespace MovieRecommender
         {
             Movie movie = listMovies.SelectedItem as Movie;
             PhoneApplicationService.Current.State["movieId"] = movie.movieId;
-            NavigationService.Navigate(new Uri("/RateMovie.xaml", UriKind.Relative));
+            PhoneApplicationService.Current.State["which"] = 0;
+            NavigationService.Navigate(new Uri("/MovieReview.xaml", UriKind.Relative));
         }
     }
 }

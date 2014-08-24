@@ -62,6 +62,12 @@ namespace MovieRecommender
             set;
         }
         [Column(IsDbGenerated = false)]
+        public long movieId
+        {
+            get;
+            set;
+        }
+        [Column(IsDbGenerated = false)]
         public String movieTitle
         {
             get;

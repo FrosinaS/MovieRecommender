@@ -34,7 +34,7 @@
             <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" >
                 <Button Margin="10, 10, 10, 10" Name="btnRateMovies" Content="Rate movies"  Click="rateMovies_click"></Button>
                 <Button Margin="10, 10, 10, 10" Name="btnSeeSuggestions" Content="See suggestions"  Click="seeSuggestions_click"></Button>
-                <Button Margin="10, 10, 10, 10" Name="btnToDoList" Content="My to do list" Click="btnToDoList_click"></Button>
+                <Button Margin="10, 10, 10, 10" Name="btnToDoList" Content="My watch list" Click="btnToDoList_click"></Button>
             </StackPanel>
         </Grid>
     </Grid>

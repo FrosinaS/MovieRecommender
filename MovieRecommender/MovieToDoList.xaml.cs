@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 
 namespace MovieRecommender
 {
@@ -38,7 +39,7 @@ namespace MovieRecommender
                     {
                         foreach (ToDoList list in toDoList)
                         {
-                            Movie mov = new Movie(-1);
+                            Movie mov = new Movie(list.movieId);
                             mov.movieImage = list.movieImage;
                             mov.movieTitle = list.movieTitle;
                             movies.Add(mov);
@@ -50,6 +51,14 @@ namespace MovieRecommender
 
                 }
             }
+        }
+
+        private void watchList_selectedIndexChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Movie movie = toDoListMovies.SelectedItem as Movie;
+            PhoneApplicationService.Current.State["movieId"] = movie.movieId;
+            PhoneApplicationService.Current.State["which"] = 3;
+            NavigationService.Navigate(new Uri("/MovieReview.xaml", UriKind.Relative));
         }
     }
 }
