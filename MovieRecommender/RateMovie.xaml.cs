@@ -153,8 +153,11 @@ namespace MovieRecommender
                 
                 IQueryable<RatedMovies> EmpQuery = from RatedMovies mv in MvDb.RatedMovies where mv.movieId == movieID select mv;
                 RatedMovies ratedMovies = EmpQuery.FirstOrDefault();
-                MvDb.RatedMovies.DeleteOnSubmit(ratedMovies);
-                //MvDb.SubmitChanges();
+                if (ratedMovies != null)
+                {
+                    MvDb.RatedMovies.DeleteOnSubmit(ratedMovies);
+                    MvDb.SubmitChanges();
+                }
                 RatedMovies newMovie = new RatedMovies
                 {
                     movieId = movieID,
@@ -174,8 +177,11 @@ namespace MovieRecommender
             {
                 IQueryable<RatedMovies> EmpQuery = from RatedMovies mv in MvDb.RatedMovies where mv.movieId == movieID select mv;
                 RatedMovies ratedMovies = EmpQuery.FirstOrDefault();
-                MvDb.RatedMovies.DeleteOnSubmit(ratedMovies);
-                MvDb.SubmitChanges();
+                if (ratedMovies != null)
+                {
+                    MvDb.RatedMovies.DeleteOnSubmit(ratedMovies);
+                    MvDb.SubmitChanges();
+                }
                 RatedMovies newMovie = new RatedMovies
                 {
                     movieId = movieID,

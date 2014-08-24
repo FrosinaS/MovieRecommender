@@ -32,7 +32,7 @@ namespace MovieRecommender
             try
             {
                 WebClient webClient = new WebClient();
-                Uri uri = new Uri("https://api.themoviedb.org/3/discover/movie?api_key=9d8233dd037a14ac32e473b3147e67f0&with_genres=35");
+                Uri uri = new Uri("https://api.themoviedb.org/3/discover/movie?api_key=9d8233dd037a14ac32e473b3147e67f0&with_genres=35&primary_release_year=2014");
                 webClient.DownloadStringCompleted += webClient_DownloadStringCompleted;
                 webClient.DownloadStringAsync(uri);
 

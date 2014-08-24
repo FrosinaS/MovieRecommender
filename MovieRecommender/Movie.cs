@@ -41,7 +41,7 @@ namespace MovieRecommender
     {
         public String adult { get; set; }
         public String backdrop_path { get; set; }
-        public String belongs_to_collection { get; set; }
+        public BelongsToCollection belongs_to_collection { get; set; }
         public long budget { get; set; }
         public List<Genre> genres { get; set; }
         public String homepage { get; set; }
@@ -73,6 +73,13 @@ namespace MovieRecommender
             this.name = name;
             this.id = id;
         }
+    }
+    public class BelongsToCollection
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public object poster_path { get; set; }
+        public object backdrop_path { get; set; }
     }
 
     public class ProductionCountries
