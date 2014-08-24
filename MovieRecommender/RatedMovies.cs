@@ -52,6 +52,28 @@ namespace MovieRecommender
             set;
         }
     }
+    [Table]
+    public class ToDoList
+    {
+        [Column(IsPrimaryKey = true, IsDbGenerated = true, CanBeNull = false)]
+        public int id
+        {
+            get;
+            set;
+        }
+        [Column(IsDbGenerated = false)]
+        public String movieTitle
+        {
+            get;
+            set;
+        }
+        [Column(CanBeNull = false, IsDbGenerated = false)]
+        public String movieImage
+        {
+            get;
+            set;
+        }
+    }
 
     public class MovieDataContext:DataContext
     {
@@ -76,6 +98,13 @@ namespace MovieRecommender
             get
             {
                 return this.GetTable<FavoriteGenres>();
+            }
+        }
+        public Table<ToDoList> ToDoList
+        {
+            get
+            {
+                return this.GetTable<ToDoList>();
             }
         }
        }

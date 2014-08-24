@@ -1,0 +1,72 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="MovieRecommender.MovieReview"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+     xmlns:local="clr-namespace:MovieRecommender"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
+    shell:SystemTray.IsVisible="True">
+    <phone:PhoneApplicationPage.Resources>
+        <local:GenresConverter x:Key="GenresConverter"/>
+    </phone:PhoneApplicationPage.Resources>
+
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ListBox Grid.Row="0" Grid.Column="0">
+            <ListBoxItem>
+                <ListBoxItem.Content>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel x:Name="TitlePanel" Orientation="Vertical" Width="450" Grid.ColumnSpan="2" Margin="15,0">
+                            <TextBlock Text="{Binding Path=movieTitle, Mode=OneWay}" TextWrapping="Wrap" FontSize="36"/>
+                            <StackPanel Orientation="Horizontal" >
+                                <Image Source="{Binding Path=movieImage, Mode=OneWay}" Width="250" Height="250"/>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding Path=movieOriginalTitle, Mode=OneWay}" Margin="5, 5, 5, 5" Width="190" TextWrapping="Wrap"/>
+                                    <StackPanel Orientation="Horizontal" Height="70" >
+                                        <Button Name="addToDoList" Content="Add to my to do list" VerticalAlignment="Center" FontSize="14" Click="addToDoList_click"></Button>
+                                        </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+
+                        </StackPanel>
+
+
+                        <StackPanel Orientation="Vertical" >
+                            <Grid x:Name="ContentPanel" Margin="12,0,12,0" Width="450">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" ></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Margin="10" Text="Release date:"></TextBlock>
+                                <TextBlock Grid.Row="0" Grid.Column="1" Margin="10" Text="{Binding Path=movieReleaseDate, Mode=OneWay}" ></TextBlock>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Margin="10" Text="Movie status:"></TextBlock>
+                                <TextBlock Grid.Row="1" Grid.Column="1" Margin="10" Text="{Binding Path=movieStatus, Mode=OneWay}" ></TextBlock>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Margin="10" Text="Genres:"></TextBlock>
+                                <TextBlock Grid.Row="2" Grid.Column="1" Margin="10" Text="{Binding Path=movieGenres, Mode=OneWay, Converter={StaticResource GenresConverter}}" ></TextBlock>
+                            </Grid>
+                            <StackPanel Height="Auto" Orientation="Horizontal" Margin="10">
+                                <TextBlock TextWrapping="Wrap" Margin="5" Text="{Binding Path=movieOverview, Mode=OneWay}" Width="440" Height="Auto"></TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </ListBoxItem.Content>
+            </ListBoxItem>
+        </ListBox>
+    </Grid>
+
+</phone:PhoneApplicationPage>

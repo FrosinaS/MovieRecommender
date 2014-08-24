@@ -31,6 +31,16 @@ namespace MovieRecommender
 
             NavigationService.Navigate(new Uri("/RateMovies.xaml", UriKind.Relative));
         }
+
+        private void seeSuggestions_click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/MovieSuggestions.xaml", UriKind.Relative));
+        }
+
+        private void btnToDoList_click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/MovieToDoList.xaml", UriKind.Relative));
+        }
         
     }
 }
