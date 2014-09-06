@@ -13,6 +13,7 @@ using Microsoft.Phone.Controls;
 using Newtonsoft.Json;
 using Microsoft.Phone.Shell;
 using System.Text;
+using System.Diagnostics;
 
 namespace MovieRecommender
 {
@@ -40,12 +41,13 @@ namespace MovieRecommender
                     IList<FavoriteGenres> gen = null;
                     IQueryable<FavoriteGenres> Query = from FavoriteGenres mv in Empdb.FavoriteGenres select mv;
                     gen = Query.ToList();
-                    WebClient webClient = new WebClient();
-                    webClient.DownloadStringCompleted += webClient_DownloadStringCompleted;
-
+                    
                     foreach (FavoriteGenres genre in gen)
                     {
                         genreId = genre.genreId;
+                        WebClient webClient = new WebClient();
+                        webClient.DownloadStringCompleted += webClient_DownloadStringCompleted;
+
                         Uri uri = new Uri("https://api.themoviedb.org/3/discover/movie?api_key=9d8233dd037a14ac32e473b3147e67f0&with_genres=" + genre.genreId);
                         webClient.DownloadStringAsync(uri);
                     }
@@ -63,16 +65,13 @@ namespace MovieRecommender
                 if (!string.IsNullOrEmpty(e.Result.ToString()))
                 {
                     var rootObject = JsonConvert.DeserializeObject<RootObject>(e.Result.ToString());
-                    int numPages = Convert.ToInt32(rootObject.total_pages);
                     Random rnd = new Random();
-                    int newPage = rnd.Next(1, numPages);
+                    int newPage = rnd.Next(1, 10);
                     WebClient webClient = new WebClient();
-                    Uri uri = new Uri("https://api.themoviedb.org/3/discover/movie?api_key=9d8233dd037a14ac32e473b3147e67f0&with_genres=" + genreId
-
-+ "&page=" + newPage);
+                    Uri uri = new Uri("https://api.themoviedb.org/3/discover/movie?api_key=9d8233dd037a14ac32e473b3147e67f0&with_genres=" + genreId + "&page=" + newPage);
                     webClient.DownloadStringCompleted += webClient_DownloadStringComplete;
                     webClient.DownloadStringAsync(uri);
-
+                    Debug.WriteLine(uri.ToString());
                 }
             }
             catch (Exception ex)
@@ -97,7 +96,9 @@ namespace MovieRecommender
                         movie.movieTitle = res.title;
                         movie.movieReleaseDate = res.release_date;
                         movies.Add(movie);
-
+                        listMovies.ItemsSource = null;
+                        listMovies.ItemsSource = movies;
+                        Debug.WriteLine("MOVIE ADDED: " + movie.movieTitle);
                     }
 
                 }
