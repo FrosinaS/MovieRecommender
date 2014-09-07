@@ -12,9 +12,16 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
+    <phone:PhoneApplicationPage.Resources>
+        <Style x:Key="style1" TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="#FF07B4A7"></Setter>
 
+            </Style.Setters>
+        </Style>
+    </phone:PhoneApplicationPage.Resources>
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="#FF07B4A7">
+    <Grid x:Name="LayoutRoot" Background="AntiqueWhite">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -22,7 +29,7 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="PageTitle" Text="Movie Recommender" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}" FontSize="48" />
+            <TextBlock x:Name="PageTitle" Text="Movie Recommender" Margin="9,-7,0,0" Style="{StaticResource style1}" FontSize="48" />
         </StackPanel>
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
@@ -32,9 +39,18 @@
             </Grid.RowDefinitions>
             <Image Grid.Row="0" Source="filmimage.png" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Name="image1" Stretch="Fill"/>
             <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" >
-                <Button Margin="10, 10, 10, 10" Name="btnRateMovies" Content="Rate movies"  Click="rateMovies_click"></Button>
-                <Button Margin="10, 10, 10, 10" Name="btnSeeSuggestions" Content="See suggestions"  Click="seeSuggestions_click"></Button>
-                <Button Margin="10, 10, 10, 10" Name="btnToDoList" Content="My watch list" Click="btnToDoList_click"></Button>
+                <StackPanel.Resources>
+                    <Style x:Key="style2" TargetType="Button">
+                        <Style.Setters>
+                            <Setter Property="Background" Value="Gray"></Setter>
+                            <Setter Property="Foreground" Value="#FF07B4A7"></Setter>
+
+                        </Style.Setters>
+                    </Style>
+                </StackPanel.Resources>
+                    <Button Margin="10, 10, 10, 10" Name="btnRateMovies" Content="Rate movies"  Click="rateMovies_click" Style="{StaticResource style2}"></Button>
+                <Button Margin="10, 10, 10, 10" Name="btnSeeSuggestions" Content="See suggestions"  Click="seeSuggestions_click" Style="{StaticResource style2}"></Button>
+                <Button Margin="10, 10, 10, 10" Name="btnToDoList" Content="My watch list" Click="btnToDoList_click" Style="{StaticResource style2}"></Button>
             </StackPanel>
         </Grid>
     </Grid>

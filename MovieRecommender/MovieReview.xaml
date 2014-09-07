@@ -9,34 +9,53 @@
      xmlns:local="clr-namespace:MovieRecommender"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
+    Foreground="Aquamarine"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True">
     <phone:PhoneApplicationPage.Resources>
         <local:GenresConverter x:Key="GenresConverter"/>
+        <Style x:Key="style2" TargetType="ListBox">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="#FF07B4A7"></Setter>
+            </Style.Setters>
+        </Style>
     </phone:PhoneApplicationPage.Resources>
 
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="AntiqueWhite">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ListBox Grid.Row="0" Grid.Column="0">
+        <ListBox Grid.Row="0" Grid.Column="0" Style="{StaticResource style2}">
             <ListBoxItem>
                 <ListBoxItem.Content>
                     <StackPanel Orientation="Vertical">
                         <StackPanel x:Name="TitlePanel" Orientation="Vertical" Width="450" Grid.ColumnSpan="2" Margin="15,0">
                             <TextBlock Text="{Binding Path=movieTitle, Mode=OneWay}" TextWrapping="Wrap" FontSize="36"/>
                             <StackPanel Orientation="Horizontal" >
-                                <Image Source="{Binding Path=movieImage, Mode=OneWay}" Width="250" Height="250"/>
+                                <Border BorderBrush="Gray" BorderThickness="2" CornerRadius="10">
+                                    <Image Source="{Binding Path=movieImage, Mode=OneWay}" Width="250" Height="250" Margin="3"/>
+                                </Border>
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock Text="{Binding Path=movieOriginalTitle, Mode=OneWay}" Margin="5, 5, 5, 5" Width="190" TextWrapping="Wrap"/>
                                     <StackPanel Orientation="Vertical" >
-                                        <Button Name="addToDoList" Content="Add to my watch list" VerticalAlignment="Center" FontSize="14" Click="addToDoList_click"></Button>
-                                        <StackPanel Orientation="Horizontal" >
-                                        <Button Name="rateUpBtn" Content="+" Width="70" VerticalAlignment="Center" Click="rateUpBtn_click"></Button>
-                                        <Button Name="rateDownBtn" Content="-" Width="70" VerticalAlignment="Center" Click="rateDownBtn_Click"></Button>
+                                        <StackPanel.Resources>
+                                            <Style x:Name="style1" TargetType="Button">
+                                                <Style.Setters>
+                                                    <Setter Property="Background" Value="Gray"></Setter>
+                                                    <Setter Property="Foreground" Value="#FF07B4A7"></Setter>
+                                                    <Setter Property="FontFamily" Value="Comic Sans MS">
+                                                    </Setter>
+                                                  
+                                                </Style.Setters>
+
+                                            </Style>
+                                        </StackPanel.Resources>
+                                        <Button Name="addToDoList" Content="Add to my watch list" VerticalAlignment="Center" FontSize="14" Click="addToDoList_click" Style="{StaticResource style1}"></Button>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                                            <Button Name="rateUpBtn" Content="+" Width="70" VerticalAlignment="Center" Click="rateUpBtn_click" Style="{StaticResource style1}"></Button>
+                                            <Button Name="rateDownBtn" Content="-" Width="70" VerticalAlignment="Center" Click="rateDownBtn_Click" Style="{StaticResource style1}"></Button>
                                     </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
@@ -51,17 +70,20 @@
                                     <RowDefinition Height="Auto" ></RowDefinition>
                                     <RowDefinition Height="Auto"></RowDefinition>
                                     <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="Auto"></RowDefinition>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition ></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Row="0" Grid.Column="0" Margin="10" Text="Release date:"></TextBlock>
                                 <TextBlock Grid.Row="0" Grid.Column="1" Margin="10" Text="{Binding Path=movieReleaseDate, Mode=OneWay}" ></TextBlock>
                                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="10" Text="Movie status:"></TextBlock>
                                 <TextBlock Grid.Row="1" Grid.Column="1" Margin="10" Text="{Binding Path=movieStatus, Mode=OneWay}" ></TextBlock>
-                                <TextBlock Grid.Row="2" Grid.Column="0" Margin="10" Text="Genres:"></TextBlock>
-                                <TextBlock Grid.Row="2" Grid.Column="1" Margin="10" Text="{Binding Path=movieGenres, Mode=OneWay, Converter={StaticResource GenresConverter}}" ></TextBlock>
+                                <TextBlock Grid.Row="4" Grid.Column="0" Margin="10" Text="Genres:"></TextBlock>
+                                <TextBlock Grid.Row="4" Grid.Column="1" Margin="10" Text="{Binding Path=movieGenres, Mode=OneWay, Converter={StaticResource GenresConverter}}" ></TextBlock>
+
                             </Grid>
                             <StackPanel Height="Auto" Orientation="Horizontal" Margin="10">
                                 <TextBlock TextWrapping="Wrap" Margin="5" Text="{Binding Path=movieOverview, Mode=OneWay}" Width="440" Height="Auto"></TextBlock>

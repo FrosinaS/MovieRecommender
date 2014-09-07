@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Newtonsoft.Json;
+using Microsoft.Phone.Tasks;
 
 namespace MovieRecommender
 {
@@ -88,7 +89,7 @@ namespace MovieRecommender
                         }
                         else
                         {
-                            rateUpBtn.IsEnabled = false;
+                            rateDownBtn.IsEnabled = false;
                         }
                     }
 
@@ -126,18 +127,22 @@ namespace MovieRecommender
                 {
                     var rootObject = (FullMovie)JsonConvert.DeserializeObject<FullMovie>(e.Result.ToString());
                     movie.movieId = rootObject.id;
-                    movie.movieImage = "http://image.tmdb.org/t/p/w500" + rootObject.poster_path;
+                    if (rootObject.poster_path != null)
+                        movie.movieImage = "http://image.tmdb.org/t/p/w500" + rootObject.poster_path;
+                   
                     movie.movieOriginalTitle = rootObject.original_title;
                     movie.movieReleaseDate = rootObject.release_date;
                     movie.movieStatus = rootObject.status;
                     movie.movieOverview = rootObject.overview;
                     movie.movieTitle = rootObject.title;
+                  
                     foreach (Genre gen in rootObject.genres)
                     {
                         Genre genre = new Genre(gen.id, gen.name);
                         movie.movieGenres.Add(genre);
                     }
-                    movie.movieHomepage = rootObject.homepage;
+                    
+               
                     LayoutRoot.DataContext = movie;
                     
                 }
@@ -255,27 +260,29 @@ namespace MovieRecommender
                 foreach (Genre genre in movie.movieGenres)
                 {
 
-                    
+
                     IQueryable<FavoriteGenres> Query = from FavoriteGenres mv in MvDb.FavoriteGenres where mv.genreId == genre.id select mv;
                     FavoriteGenres gen = Query.FirstOrDefault();
-                    
-                     if (gen == null)
+
+                    if (gen == null)
+                    {
+                        FavoriteGenres fav = new FavoriteGenres
                         {
-                            FavoriteGenres fav = new FavoriteGenres
-                            {
-                                genreId = genre.id
-                            };
-                            MvDb.FavoriteGenres.InsertOnSubmit(fav);
-                            MvDb.SubmitChanges();
-                        }
+                            genreId = genre.id
+                        };
+                        MvDb.FavoriteGenres.InsertOnSubmit(fav);
+                        MvDb.SubmitChanges();
                     }
                 }
-
-                
-                rateUpBtn.IsEnabled = false;
-                rateDownBtn.IsEnabled = true;
-                MessageBox.Show("You gave positive rating for this movie!");
             }
+
+
+            rateUpBtn.IsEnabled = false;
+            rateDownBtn.IsEnabled = true;
+            MessageBox.Show("You gave positive rating for this movie!");
+        }
+
+        
         }
 
 

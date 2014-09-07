@@ -12,8 +12,15 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True">
-
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <phone:PhoneApplicationPage.Resources>
+        <Style x:Key="style1" TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="#FF07B4A7"></Setter>
+                
+            </Style.Setters>
+        </Style>
+    </phone:PhoneApplicationPage.Resources>
+        <Grid x:Name="LayoutRoot" Background="AntiqueWhite" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -22,7 +29,7 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="PageTitle" Text="Rate movies" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock x:Name="PageTitle" Text="Suggestions" HorizontalAlignment="Center" FontSize="56" Style="{StaticResource style1}"/>
         </StackPanel>
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="2,0,2,0">
@@ -33,8 +40,10 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="3, 3, 3, 6">
-                            <Image Height="150" Width="150" Source="{Binding Path=movieImage, Mode=OneWay}"></Image>
-                            <TextBlock Text="{Binding Path=movieTitle, Mode=OneWay}"></TextBlock>
+                            <Image Height="150" Width="150" Source="{Binding Path=movieImage, Mode=OneWay}" >
+                                
+                            </Image>
+                            <TextBlock Text="{Binding Path=movieTitle, Mode=OneWay}" Style="{StaticResource style1}"></TextBlock>
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>

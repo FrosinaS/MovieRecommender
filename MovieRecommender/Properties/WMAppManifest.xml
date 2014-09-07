@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
-  <App xmlns="" ProductID="{d3dd1bf0-8e6d-4b39-8176-53496f81995e}" Title="MovieRecommender" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal"  Author="MovieRecommender author" Description="Sample description" Publisher="MovieRecommender">
+  <App xmlns="" ProductID="{cbe75320-a5a6-42b1-bd96-8aebcb2b630e}" Title="MovieRecommender" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal"  Author="MovieRecommender author" Description="Sample description" Publisher="MovieRecommender">
     <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_GAMERSERVICES"/>

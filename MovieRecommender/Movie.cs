@@ -23,17 +23,19 @@ namespace MovieRecommender
         public String movieOverview { get; set; }
         public String movieStatus { get; set; }
         public String movieHomepage{get; set;}
+        public String movieImdb { get; set; }
         public Movie(long movieId)
         {
             this.movieId = movieId;
             movieTitle = "Unknown";
             movieOriginalTitle = "Unknown";
             movieOverview = "Unknown";
-            movieImage = "filmimage.png";
+            movieImage = "/filmimage.png";
             movieReleaseDate = "Unknown";
             movieStatus = "Unknown";
             movieGenres = new List<Genre>();
-            movieHomepage="/";
+            movieHomepage="Unknown";
+            movieImdb = "Unknown";
         }
 
     }
